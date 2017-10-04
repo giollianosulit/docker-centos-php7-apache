@@ -1,0 +1,24 @@
+version: '2'
+services:
+  db1:
+    image: mariadb
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: MYSQL_ROOT_PASSWORD
+      MYSQL_USER: MYSQL_ROOT_USER
+      MYSQL_PASSWORD: MYSQL_ROOT_PASSWORD
+      MYSQL_DATABASE: MYSQL_DATABASE
+    volumes:
+      - ./mysql:/var/lib/mysql
+  web1:
+    build: ./web
+    ports:
+      - "80:80"
+    links:
+      - "db1:db1"
+    volumes:
+      - ./var/public_html:/var/www/public_html
+      - ./var/logs:/var/log/httpd
+      - ./files/apache_conf/0_virtualhost.conf:/etc/httpd/conf.d/0_virtualhost.conf
